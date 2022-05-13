@@ -86,3 +86,35 @@ where student.sid = s.sid;
 SELECT STUDENT.* FROM STUDENT,
 (select ID.SID FROM  (SELECT SC.SID, count(score) as total  from sc group by sc.sid )AS ID ,
 (SELECT count(course.cid) as tcid from course)  as t1 WHERE ID.TOTAL < T1.TCID)AS D WHERE STUDENT.SID = D.SID;
+
+查询至少有一门课与学号为" 01 "的同学所学相同的同学的信息
+select * from student 
+where student.sid in (
+    select sc.sid from sc 
+    where sc.cid in(
+        select sc.cid from sc 
+        where sc.sid = '01'
+    )
+);
+10.查询没学过"张三"老师讲授的任一门课程的学生姓名
+select student.sname from student where sid not in(
+select sid  from sc ,
+(select cid  from course ,
+(select tid from teacher where tname = '张三') as id
+where course.TId = id.tid) as cid1 where sc.cid = cid1.cid);
+查询学生的总成绩，并进行排名
+select student.sid,student.sname,r.s from student ,
+(select sid,sum(score) as s  from sc group by sid)  as r 
+where student.sid = r.sid order by r.s desc;
+
+查询各科目优秀人数，分数在85分以上的人数为优秀
+select r.cid, r.cname, sum(case when  r.score >= 85 and r.score <= 100 then 1 else 0 end )as "优秀"
+from 
+ (select *  from sc  join course
+on sc.cid = course.cid) as r group by r.cid
+ ;
+ 
+ 查询语文成绩前三名
+select student.Sname, sc.sid ,sc.score from student ,sc,
+(select cid from co where cname = '语文') as b 
+where (sc.cid = b.cid and student.sid = sc.sid) order by score desc limit 3;
