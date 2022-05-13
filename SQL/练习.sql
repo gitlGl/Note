@@ -118,3 +118,29 @@ on sc.cid = course.cid) as r group by r.cid
 select student.Sname, sc.sid ,sc.score from student ,sc,
 (select cid from co where cname = '语文') as b 
 where (sc.cid = b.cid and student.sid = sc.sid) order by score desc limit 3;
+
+查询各科成绩最高分、最低分和平均分：
+select max(score)as '最高分',min(score) as '最低分',avg(score) as '平均分' from sc group by sc.cid;
+
+查询每门课程被选修的学生数
+select sc.cid,sum(sc.sid) from sc group by sc.CId ;
+
+查询男生数、女生数量
+select ssex ,count(sid) from student group by ssex;
+
+查询名字含有风的学生的信息
+select  * from student where sname  like '%风%';
+
+查询同名学生数量
+
+select r.sname,r.num from (select  student.*,count(sname) as num  from student group by sname) as r
+where r.num >1;
+
+嵌套查询列出同名的全部学生的信息
+select * from student
+where sname in (
+select sname from student
+group by sname
+having count(*)>1
+);
+
