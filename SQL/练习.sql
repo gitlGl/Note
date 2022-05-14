@@ -144,3 +144,22 @@ group by sname
 having count(*)>1
 );
 
+查询平均成绩大于等于 85 的所有学生的学号、姓名和平均成绩
+ select student .*,r.avger from 
+ (select   sid, avg(score)as avger  from sc group by sid)as r,student  
+ where student.sid = r.sid and r.avger >= 85;
+ 
+ select student.sid, student.sname, AVG(sc.score) as aver from student, sc
+where student.sid = sc.sid
+group by sc.sid
+having aver > 85;
+
+ select student.sid,student.sname,r.* from (select  sid ,score ,sc.cid from sc where sc.cid = '01' and sc.score >= 80)as r,student where student.sid = r.sid;
+ 
+ 查询课程编号为 01 且课程成绩在 80 分及以上的学生的学号和姓名
+ select student.sid,student.sname ,sc.score
+from student,sc
+where cid="01"
+and score>=80
+and student.sid = sc.sid
+
