@@ -154,9 +154,9 @@ where student.sid = sc.sid
 group by sc.sid
 having aver > 85;
 
+查询课程编号为 01 且课程成绩在 80 分及以上的学生的学号和姓名
  select student.sid,student.sname,r.* from (select  sid ,score ,sc.cid from sc where sc.cid = '01' and sc.score >= 80)as r,student where student.sid = r.sid;
  
- 查询课程编号为 01 且课程成绩在 80 分及以上的学生的学号和姓名
  select student.sid,student.sname ,sc.score
 from student,sc
 where cid="01"
