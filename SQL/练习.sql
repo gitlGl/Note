@@ -157,10 +157,10 @@ having aver > 85;
 from student,sc
 where cid="01"
 and score>=80
-and student.sid = sc.sid;
+、
 
 查询同名学生名单，并统计同名人数
-select b.*,c.num  from (select student.* from student join student as a on
+select b.*,c.num from (select student.* from student join student as a on
  student.sid != a.sid 
  and student.sname = a.sname)as b join (select  student.sname,count(student.sname) as num from student group by 
  student.sname) as c on b.sname = c.sname; 
