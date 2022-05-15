@@ -43,17 +43,13 @@ insert into SC values('06' , '03' , 34);
 insert into SC values('07' , '02' , 89);
 insert into SC values('07' , '03' , 98);
 1.1.查询" 01 "课程比" 02 "课程成绩高的学生的信息及课程分数
-1.1.1  select * from Student join  ( 
-select t1.sid,t1.score as c1 ,t2.score as c2 from 
-    (select SId, score  from sc where sc.CId = '01') as t1, 
-    (select SId ,score  from sc where sc.CId = '02') as t2
-  where t1.SId = t2.SId ) as r  on Student.SId = r.SId ;
 
- select * from Student,  ( 
+
+select student.*,r.* from Student,  ( 
 select t1.sid,t1.score as c1 ,t2.score as c2 from 
     (select SId, score  from sc where sc.CId = '01') as t1, 
     (select SId ,score  from sc where sc.CId = '02') as t2
-  where t1.SId = t2.SId ) as r where  Student.SId = r.SId ;
+  where t1.score > t2.score  and t1.sid = t2.sid) as r where  Student.SId = r.SId ;
 
 3.查询平均成绩大于等于 60 分的同学的学生编号和学生姓名和平均成绩
 2 . select student.sid, sname ,r.avger from student join ( 
@@ -161,5 +157,11 @@ having aver > 85;
 from student,sc
 where cid="01"
 and score>=80
-and student.sid = sc.sid
+and student.sid = sc.sid;
+
+查询同名学生名单，并统计同名人数
+select b.*,c.num  from (select student.* from student join student as a on
+ student.sid != a.sid 
+ and student.sname = a.sname)as b join (select  student.sname,count(student.sname) as num from student group by 
+ student.sname) as c on b.sname = c.sname; 
 
