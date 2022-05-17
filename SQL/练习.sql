@@ -12,6 +12,7 @@ insert into Student values('11' , '李四' , '2012-06-06' , '女');
 insert into Student values('12' , '赵六' , '2013-06-13' , '女');
 insert into Student values('13' , '孙七' , '2014-06-01' , '女');
 
+
 create table Course(CId varchar(10),Cname nvarchar(10),TId varchar(10));
 insert into Course values('01' , '语文' , '02');
 insert into Course values('02' , '数学' , '01');
@@ -142,7 +143,7 @@ having count(*)>1
 
 查询平均成绩大于等于 85 的所有学生的学号、姓名和平均成绩
  select student .*,r.avger from 
- (select   sid, avg(score)as avger  from sc group by sid)as r,student  
+ (select   sid, avg(score)as avger  from sc group by sid)as r,student   
  where student.sid = r.sid and r.avger >= 85;
  
  select student.sid, student.sname, AVG(sc.score) as aver from student, sc
@@ -165,3 +166,16 @@ select b.*,c.num from (select student.* from student join student as a on
  and student.sname = a.sname)as b join (select  student.sname,count(student.sname) as num from student group by 
  student.sname) as c on b.sname = c.sname; 
 
+查询至少有一门课与学号为" 01 "的同学所学相同的同学的信息
+select student.* from (select sc.sid from ((select sc.sid, sc.cid from  sc  where sc.SId = '01')as r  
+join sc on sc.sid != r.sid and sc.CId in  (r.cid)))as a 
+,student  where student.sid = a.sid group by  a.sid ;
+
+select * from student 
+ where student.sid in (
+    select sc.sid from sc 
+    where sc.cid in(
+        select sc.cid from sc 
+        where sc.sid = '01'
+    )
+);
